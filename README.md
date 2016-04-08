@@ -11,24 +11,25 @@ Example:
 
 playbooks
   |
-   --- vars -> vars.yml file
+   --- vars
+        | --> vars.yml file
 
 run usage:
 Validate your hosts first:
-ansible-playbooks playbooks/db_reseed-innobackupex.yml --list-hosts
+- ansible-playbooks playbooks/db_reseed-innobackupex.yml --list-hosts
 
 This will also let you know, if any spacing or syntax options ansible does not like.
 
 When comfortable with the playbook run it:
-ansible-playbooks playbooks/db_reseed-innobackupex.yml
+- ansible-playbooks playbooks/db_reseed-innobackupex.yml
 
 I like to log into both servers to monitor the progress, as well.
 
 On the Master
-while :; do ps -ef grep -i ansible | grep -v ansible; sleep 3; done
+- while :; do ps -ef grep -i ansible | grep -v ansible; sleep 3; done
 
 On the Slave:
-while :; do ls -lhrt /db/backup/* ; sleep 3; done
+- while :; do ls -lhrt /db/backup/* ; sleep 3; done
 
 Just so I can see the backup is in progress of transfering.
 This playbook worked, but more testing is needed.  Largest database size tested 2G; not that big. This was just a proof of concept for me.
