@@ -1,10 +1,10 @@
 dbtraining002 is the master and dbtraining003 is the slave in this Ansible Playbook.
 
 What is needed: 
-1) You have ssh to both boxes.
-2) MySQL setup and running, as this is just a reseed playbook.
-3) A var yml file to store your passwords. example  mysql_repl_pass  and mysql_root_pass
-4) As this was not production, I have a .my.cnf file on both servers for testing.
+You have ssh to both boxes.
+- MySQL setup and running, as this is just a reseed playbook.
+- A var yml file to store your passwords. example  mysql_repl_pass  and mysql_root_pass
+- As this was not production, I have a .my.cnf file on both servers for testing.
 
 Directory layout:
 Example:
