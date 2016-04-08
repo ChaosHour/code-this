@@ -1,0 +1,147 @@
+---
+- hosts: dbtraining002
+  remote_user: me
+  become: yes
+  become_user: root
+  become_method: sudo
+  gather_facts: True
+  vars_files:
+    -  vars/main.yml
+ 
+ 
+  tasks:
+        
+      - name: Stop MySQL on the Slave
+        service: name=mysql state=stopped 
+        delegate_to: dbtraining003
+             
+      - name: Delete data in data01 logs01
+        shell: rm -rf /db/{data01/*,logs01/*}  
+        delegate_to: dbtraining003
+        
+      - name: wait for ibdata01 to be deleted
+        wait_for: path=/db/data01/ibdata1 state=absent
+        delegate_to: dbtraining003
+        
+      - name: Clean any failed screen sessions on the slave
+        shell:  screen -ls | grep migrate | cut -d. -f1 | awk '{print $1}' | xargs kill 2>>/dev/null
+        delegate_to: dbtraining003
+        ignore_errors: yes
+        
+        
+      - name: Clean any failed screen sessions on the Master
+        command: screen -wipe  
+        ignore_errors: yes  
+        
+        
+      - name: start listener on slave 
+        shell: screen -S migrate -md bash -c 'nc -l 4000 | tee >( sha1sum > dvd.sha1 ) >( sha1sum > dvd.sha2 ) > data01-$( date +%F ).xbstream'  chdir=/db/backup
+        #shell: screen -S migrate -md bash -c 'nc -l 4000 | tee >(sha1sum > destination_checksum) > data01-$(date +%F).tgz' chdir=/db/backup
+        async: 45
+        poll: 0
+        register: migrate_nc
+        delegate_to: dbtraining003
+        failed_when: migrate_nc.rc != 0
+        changed_when: migrate_nc.rc == 0
+        
+        
+        
+      - name: start transfer on master
+        shell: screen -S migrate2 -md bash -c 'innobackupex --compress --compress-threads=1  --stream=xbstream --parallel=1 /db/data01 | tee >( sha1sum > sdvd.sha1 ) >( sha1sum > sdvd.sha2 ) | nc x.x.x.x 4000'
+        #args:
+        #   chdir: /db
+        register: migrate_nc2
+        failed_when: migrate_nc2.rc != 0
+        changed_when: migrate_nc2.rc == 0
+      
+     
+      #- name: Pause for 10 seconds 
+      #  pause: seconds=10 
+      
+      - name: Get pid of screen session on the Master   
+        command: pgrep screen
+        register: p_screen
+        #ignore_errors: yes
+        
+      #- debug: p_screen  
+        
+      - name: Wait for screen session on Master to complete  
+        wait_for: path=/proc/{{ p_screen.stdout }}/status  state=absent
+   
+  
+- hosts: dbtraining003
+  remote_user: me
+  become: yes
+  become_user: root
+  become_method: sudo
+  gather_facts: True
+  vars_files:
+    -  vars/main.yml
+  
+  tasks:
+        
+    - name: extract the xbstream files
+      shell: xbstream -xv < data01-$(date +%F).xbstream -C /db/data01
+      args:
+           chdir: /db/backup
+           
+    - name: extract qpress files
+      command: find /db/data01 -name "*.qp" -execdir qpress -dv \{\} . \; -exec rm {} \;
+      
+    - name: apply logs
+      command: innobackupex  --apply-log --use-memory=2G  /db/data01/   
+      
+    - name: move logs to /db/logs01
+      command: mv ib_logfile0 ib_logfile1 ib_logfile2 /db/logs01/
+      args:
+           chdir: /db/data01 
+      
+      
+    - name: Change owner ship to mysql of directories under /db
+      file:
+          path: /db
+          state: directory
+          recurse: True
+          mode: 0750
+          owner: mysql
+          group: mysql
+          
+          
+    - name: change owner ship to mysql of files under /db
+      command: find /db/data01/  -type f  -exec chmod 640  '{}' \;
+    
+   
+    - name: Remove auto.cnf from /db/data01 dir on Slave
+      file: path=/db/data01/auto.cnf state=absent  
+     
+    - name: Start MySQL on the Slave
+      service: name=mysql state=started
+             
+             
+    - name: cat xtrabackup_binlog file
+      shell: cat xtrabackup_binlog_pos_innodb | awk '{ print $1 }' | cut -d'/' -f4
+      args:
+         chdir: /db/data01
+      register: xtra1_file  
+      
+    - debug: var=xtra1_file.stdout   
+   
+   
+    - name: cat xtrabackup_binlog2 file
+      shell: cat xtrabackup_binlog_pos_innodb | awk '{ print $2 }'
+      args:
+         chdir: /db/data01
+      register: xtra2_file  
+      
+    - debug: var=xtra2_file.stdout 
+             
+ 
+    - name: Stop Replication
+      mysql_replication: mode=stopslave login_user=root login_password={{ mysql_root_pass }}
+      
+    - name: Change master to start replication on Slave 
+      mysql_replication: mode=changemaster master_host=x.x.x.x master_user=repl master_password={{ mysql_repl_pass }} master_log_file={{ xtra1_file.stdout }} master_log_pos={{ xtra2_file.stdout }} login_user=root login_password={{ mysql_root_pass }}        
+      ignore_errors: yes
+ 
+    - name: Start Replication on Slave
+      mysql_replication: mode=startslave login_user=root login_password={{ mysql_root_pass }} 
