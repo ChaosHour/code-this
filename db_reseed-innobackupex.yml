@@ -92,7 +92,7 @@
       command: innobackupex  --apply-log --use-memory=2G  /db/data01/   
       
     - name: move logs to /db/logs01
-      command: mv {ib_logfile0,ib_logfile1,ib_logfile2} /db/logs01/
+      command: mv ib_logfile0 ib_logfile1 ib_logfile2 /db/logs01/
       args:
            chdir: /db/data01 
       
