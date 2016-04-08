@@ -22,7 +22,7 @@ run usage:
 
 ansible-playbook playbooks/db_reseed-innobackupex.yml --list-hosts
 
-This will also let you know, if any spacing or syntax options ansible does not like.
+This will also let you know, if any spacing or syntax options ansible does not like. It's main function is to list the affected hosts.
 
 - When comfortable with the playbook run it:
 
