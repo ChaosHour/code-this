@@ -18,13 +18,13 @@ run usage:
 
 - Validate your hosts first:
 
-ansible-playbooks playbooks/db_reseed-innobackupex.yml --list-hosts
+ansible-playbook playbooks/db_reseed-innobackupex.yml --list-hosts
 
 This will also let you know, if any spacing or syntax options ansible does not like.
 
 - When comfortable with the playbook run it:
 
-ansible-playbooks playbooks/db_reseed-innobackupex.yml
+ansible-playbook playbooks/db_reseed-innobackupex.yml
 
 I like to log into both servers to monitor the progress, as well.
 
