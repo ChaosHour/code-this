@@ -11,9 +11,16 @@ Directory layout:
 Example:
 
 playbooks
+
   |
+
   vars
-  | --> vars.yml file
+
+  |
+
+    --> main.yml file
+
+
 
 run usage:
 
