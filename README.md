@@ -166,13 +166,13 @@ changed: [dbtraining003]
 
 PLAY RECAP
 *********************************************************************
-dbtraining002          : ok=10   changed=4    unreachable=0    failed=0
-dbtraining003          : ok=16   changed=12   unreachable=0    failed=0
+- dbtraining002          : ok=10   changed=4    unreachable=0    failed=0
+- dbtraining003          : ok=16   changed=12   unreachable=0    failed=0
 
 
 
 Check your replication status:
-
+-
 ansible -u me dbtraining003 -e @vars/main.yml -m shell -s -a 'mysql -u root
 -p"{{ mysql_root_pass }}" -e "show slave status\G"| egrep
 "Slave_IO_Running:|Slave_SQL_Running:|Seconds_Behind_Master:|Master_Host:"'
@@ -182,3 +182,4 @@ las1dbtraining003 | SUCCESS | rc=0 >>
             Slave_SQL_Running: Yes
         Seconds_Behind_Master: 0
 
+-
