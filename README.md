@@ -173,10 +173,10 @@ PLAY RECAP
 
 Check your replication status:
 -
-ansible -u me dbtraining003 -e @vars/main.yml -m shell -s -a 'mysql -u root
+- ansible -u me dbtraining003 -e @vars/main.yml -m shell -s -a 'mysql -u root
 -p"{{ mysql_root_pass }}" -e "show slave status\G"| egrep
 "Slave_IO_Running:|Slave_SQL_Running:|Seconds_Behind_Master:|Master_Host:"'
-las1dbtraining003 | SUCCESS | rc=0 >>
+- dbtraining003 | SUCCESS | rc=0 >>
                   Master_Host: x.x.x.x
              Slave_IO_Running: Yes
             Slave_SQL_Running: Yes
