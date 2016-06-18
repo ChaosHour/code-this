@@ -35,7 +35,8 @@
         
         
       - name: start listener on slave 
-        shell: screen -S migrate -md bash -c 'nc -l 4000 | tee >( sha1sum > dvd.sha1 ) >( sha1sum > dvd.sha2 ) > data01-$( date +%F ).xbstream'  chdir=/db/backup
+        shell: screen -S migrate -md bash -c 'nc -l 4000 > data01-$(date +%F).xbstream && sha1sum data01-$(date +%F).xbstream > destination_checksum'  chdir=/db/backup
+        #shell: screen -S migrate -md bash -c 'nc -l 4000 | tee >( sha1sum > dvd.sha1 ) >( sha1sum > dvd.sha2 ) > data01-$( date +%F ).xbstream'  chdir=/db/backup
         #shell: screen -S migrate -md bash -c 'nc -l 4000 | tee >(sha1sum > destination_checksum) > data01-$(date +%F).tgz' chdir=/db/backup
         async: 45
         poll: 0
@@ -47,7 +48,7 @@
         
         
       - name: start transfer on master
-        shell: screen -S migrate2 -md bash -c 'innobackupex --compress --compress-threads=1  --stream=xbstream --parallel=1 /db/data01 | tee >( sha1sum > sdvd.sha1 ) >( sha1sum > sdvd.sha2 ) | nc x.x.x.x 4000'
+        shell: screen -S migrate2 -md bash -c 'innobackupex --compress --compress-threads=1  --stream=xbstream --parallel=1 /db/data01 | tee >( sha1sum > source_checksum ) | nc x.x.x.x 4000'
         #args:
         #   chdir: /db
         register: migrate_nc2
