@@ -7,8 +7,8 @@ What is needed:
 - A var yml file to store your passwords. example:  mysql_repl_pass and mysql_root_pass.
 
 ```
-*Note:* there is a problem with the Ansible mysql_replication.py extras
-module, that you have to change the way it works with MySQL passwords from
+*Note:* There is a problem with the error handling in the Ansible mysql_replication.py extras
+module. In order to use the mysql_replication module, you have to change the way it works with MySQL passwords from
 a script, from the command line.
 
 
