@@ -6,6 +6,21 @@ What is needed:
 - MySQL setup and running, as this is just a reseed playbook.
 - A var yml file to store your passwords. example:  mysql_repl_pass and mysql_root_pass.
 
+```
+*Note:* there is a problem with the Ansible mysql_replication.py extras
+module, that you have to change the way it works with MySQL passwords from
+a script, from the command line.
+
+
+*/usr/local/Cellar/ansible/1.9.**4/libexec/lib/python2.7/site-*
+*packages/ansible/modules/**extras/database/mysql/mysql_**replication.py*
+
+320:        warnings.filterwarnings('ignore', category=MySQLdb.Warning)
+321:        #warnings.filterwarnings('error', category=MySQLdb.Warning)
+
+I had to use ignore instead of the original line 321 error.
+```
+
 Directory layout:
 Example:
 
