@@ -1,9 +1,11 @@
 Role Names
 =========
-percona
-proxysql
-replication
+- percona
+- proxysql
+- replication
 
+
+`This playbook sets up 4 vms total. To test out ProxySQL read/write splitting, and failover. A Master with 2 slaves replicated.`
 
 
 A brief description of the roles.
