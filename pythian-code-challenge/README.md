@@ -43,7 +43,7 @@ You should start to see your vm's being built. Soon after vagrant will pass the 
 
 The directory structure, as it is now.
 
-tree
+```tree
 .
 ├── README.md
 ├── Vagrantfile
@@ -78,7 +78,7 @@ tree
     └── main.yml
 
 13 directories, 38 files
-
+```
 
 
 Troubleshooting:
