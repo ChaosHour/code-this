@@ -1,0 +1,29 @@
+---
+#
+# post-install.yml - Playbook to add some things after the installs have completed.
+#
+
+- name: Copy secure.sql
+  copy: src=roles/percona/files/secure.sql dest=/tmp/secure.sql  owner=mysql group=mysql mode=0644
+  #when: ansible_hostname == "master"
+
+- name: Load secure.sql
+  command: mysql -u root -e "source /tmp/secure.sql"
+  #when: ansible_hostname == "master"
+
+- name: Remove secure.sql
+  file: path=/tmp/secure.sql state=absent
+  #when: ansible_hostname == "master"
+
+- name: copy .my.cnf file with root password credentials
+  template: src=roles/percona/templates/.my.cnf.j2 dest=/root/.my.cnf owner=root mode=0600
+  #when: ansible_hostname != "proxysql"
+  #when: "'proxysql' not in ansible_hostname "
+
+- name: Copy checkip-dyndns.sh to remote server
+  copy: src=roles/percona/files/checkip-dyndns.sh dest=/tmp/checkip-dyndns.sh  owner=root group=root mode=0755
+
+- name: Run checkip-dyndns.sh on the remote server, send output to file in /tmp dir
+  shell: /tmp/checkip-dyndns.sh
+  #args:
+  #  chdir: /tmp

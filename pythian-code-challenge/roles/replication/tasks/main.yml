@@ -1,0 +1,55 @@
+---
+#
+# replication.yml -  Playbook Used to setup MySQL replication on slave and etlslave to master server.
+#
+
+
+      - name: Stop MySQL on Slave
+        command: systemctl stop mysqld
+
+
+      - name: Get the master replication status
+        mysql_replication: mode=getmaster login_user=root login_password={{ mysql_root_pass }}
+        delegate_to: master
+        register: repl_stat
+
+
+      - debug: var=repl_stat
+
+
+      - name: Create replication account
+        mysql_user: name=repl host={{ host_subnet }} password={{ mysql_repl_pass }} priv="*.*:REPLICATION SLAVE"  login_user=root login_password={{ mysql_root_pass }}  state=present
+        delegate_to: master
+
+
+      - name: Remove auto.cnf from /db/data01 dir on Slave
+        file: path=/db/data01/auto.cnf state=absent
+
+      - name: Start MySQL on Slaves
+        command: systemctl start mysqld
+
+
+      - name: wait for MySQL before proceeding on Slave
+        wait_for: port=3306 host={{ ansible_hostname }}
+
+
+      - name: Stop Replication
+        mysql_replication: mode=stopslave login_user=root login_password={{ mysql_root_pass }}
+
+
+      - name: Change master to start replication on Slave
+        mysql_replication: mode=changemaster master_host={{ master }} master_user=repl master_password={{ mysql_repl_pass }} master_log_file={{ repl_stat.File }} master_log_pos={{ repl_stat.Position }} login_user=root login_password={{ mysql_root_pass }}
+        ignore_errors: yes
+
+
+      - name: Start Replication on Slave
+        mysql_replication: mode=startslave login_user=root login_password={{ mysql_root_pass }}
+
+      - name: Check replication
+        mysql_replication: mode=getslave login_port=3306 login_user=root login_password={{ mysql_root_pass }}
+        register: repl_stat2
+        #when: ( ansible_hostname == 'etlslave')
+
+      # Need to figure out how to list multiple vars on the same line.
+      - debug:  var=(repl_stat2.Master_Host,repl_stat2.Master_Log_File,repl_stat2.Read_Master_Log_Pos)
+        #when: ( ansible_hostname == 'etlslave')

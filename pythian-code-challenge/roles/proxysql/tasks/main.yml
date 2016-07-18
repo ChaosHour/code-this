@@ -1,0 +1,27 @@
+---
+#
+# proxysql.yml - Playbook to install and configure proxysql
+#
+
+  - name: copy Proxysql rpm to remote server
+    copy: src=files/proxysql-1.2.0-1-centos7.x86_64.rpm  dest=/tmp
+    when: ansible_hostname == "proxysql"
+
+  - name: install Proxysql from /tmp on remote server
+    yum: name=/tmp/proxysql-1.2.0-1-centos7.x86_64.rpm state=installed
+    when: ansible_hostname == "proxysql"
+
+  - name: Start up the DB if not already started
+    command: /etc/init.d/proxysql start
+    when: ansible_hostname == "proxysql"
+
+  - name: copy rules to proxy server
+    copy: src=files/rules.sql  dest=/tmp
+    when: ansible_hostname == "proxysql"
+
+  - wait_for: port=6032 delay=10
+    when: ansible_hostname == "proxysql"
+
+  - name: apply proxy rules to proxysql server
+    shell: mysql -u admin -p{{ proxysql_admin_pass }} -h 127.0.0.1 -P6032 < /tmp/rules.sql
+    when: ansible_hostname == "proxysql"

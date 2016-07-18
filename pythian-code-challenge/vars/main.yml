@@ -1,0 +1,22 @@
+---
+
+# Set Vars For your mysql config file - my.cnf
+replication_server_id: "{% set j2l1 = ansible_eth1.ipv4.address.split('.') %} {% set j2l2 = j2l1[1:] | join() %}   {% print(j2l2  )  %}"
+innodb_buffer_pool_size: "{{ ansible_memtotal_mb / 2 }}"
+innodb_thread_concurrency: "{{(ansible_processor_cores*4)|int }}"
+
+
+# Constants
+mysql_root_pass: "ou812"
+mysql_repl_pass: "slAv3"
+chaos_pass: "letmein"
+proxysql_admin_pass: "admin"
+
+# Server ips
+master: "192.168.50.2"
+slave: "192.168.50.3"
+etlslave: "192.168.50.4"
+proxysql: "192.168.50.5"
+
+# Subnets
+host_subnet: "192.168.50.%"

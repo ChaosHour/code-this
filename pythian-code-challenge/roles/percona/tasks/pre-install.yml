@@ -1,0 +1,43 @@
+---
+#
+# pre-install.yml - Playbook to add some things before the main install.
+#
+
+  - name: Symlink /usr/share/zoneinfo/UTC to /etc/localtime 1 of 2
+    file: path=/etc/localtime state=absent
+    when: ansible_date_time.tz != 'UTC'
+
+  - name: Symlink /usr/share/zoneinfo/UTC to /etc/localtime 2 of 2
+    file: src=/usr/share/zoneinfo/UTC dest=/etc/localtime owner=root group=root state=link
+    when: ansible_date_time.tz != 'UTC'
+
+  - name: Replace /etc/sysconfig/clock
+    shell: echo 'ZONE="UTC"' > /etc/sysconfig/clock
+    when: ansible_date_time.tz != 'UTC'
+
+  - name: Install selinux support
+    yum: name=libselinux-python
+
+  - name: disalbe selinux
+    selinux: state=disabled
+
+  - name: install the MySQL Percona rpm from a remote repo
+    yum: name=http://www.percona.com/downloads/percona-release/redhat/0.1-3/percona-release-0.1-3.noarch.rpm state=present
+
+  - name: install remote epel repo for CentOS 7 -- Needed to install htop
+    yum: name=https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm state=present
+
+  - name: System, set the swappiness to zero
+    sysctl: name=vm.swappiness value=0 state=present reload=false
+
+
+  - name: System, install some base packages
+    yum: name={{ item }}
+    with_items:
+        - nmap-ncat.x86_64
+        - wget
+        - curl
+        - screen
+        - rsync
+        - openssh-clients
+        - qpress

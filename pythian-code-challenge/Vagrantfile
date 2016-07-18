@@ -1,0 +1,46 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+VAGRANTFILE_API_VERSION = "2"
+
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.box      = "centos/7"
+  config.vm.provision "ansible" do |ansible|
+    #ansible.verbose = "vvv"
+    ansible.playbook = "build.yml"
+    ansible.sudo = true
+  end
+
+  config.vm.define "proxysql" do |proxysql|
+    proxysql.vm.hostname = "proxysql"
+    proxysql.vm.network "forwarded_port", guest: 6032, host: 6336
+    proxysql.vm.network "forwarded_port", guest: 6031, host: 6331
+    proxysql.vm.network "private_network", ip: "192.168.50.5", virtualbox__intnet: true
+  end
+
+
+  config.vm.define "master" do |master|
+   master.vm.hostname = "master"
+    master.vm.network "forwarded_port", guest: 3306, host: 3337
+    master.vm.network "private_network", ip: "192.168.50.2", virtualbox__intnet: true
+  end
+
+ config.vm.define "slave" do |slave|
+     slave.vm.hostname = "slave"
+     slave.vm.network "forwarded_port", guest: 3306, host: 3338
+     slave.vm.network "private_network", ip: "192.168.50.3", virtualbox__intnet: true
+   end
+
+ config.vm.define "etlslave" do |etlslave|
+    etlslave.vm.hostname = "etlslave"
+    etlslave.vm.network "forwarded_port", guest: 3306, host: 3339
+    etlslave.vm.network "private_network", ip: "192.168.50.4", virtualbox__intnet: true
+  end
+
+   config.vm.provider "virtualbox" do |v|
+    #v.memory = 512
+    v.memory = 1024
+    v.cpus = 1
+  end
+ end
