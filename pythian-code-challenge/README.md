@@ -10,9 +10,9 @@ Role Names
 
 A brief description of the roles.
 ================================
-percona     role - Installs server, client, and setups dirs where the db will live.
-proxysql    role - Installs, setup, and configures proxysql to use for failover, and read, write splitting.
-replication role - Sets up MySQL replication between the slave, and etlslave with the master.  One master to slaves connected.
+`percona     role - Installs server, client, and setups dirs where the db will live.`
+`proxysql    role - Installs, setup, and configures proxysql to use for failover, and read, write splitting.`
+`replication role - Sets up MySQL replication between the slave, and etlslave with the master.  One master to slaves connected.`
 
 
 Requirements before you can use this playbook, and roles.
