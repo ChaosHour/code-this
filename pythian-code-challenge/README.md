@@ -28,6 +28,23 @@ Vagrant 1.8.1
 virtualbox
 5.0.24
 
+```
+*Note:* There is a problem with the error handling in the Ansible mysql_replication.py extras
+module. 
+
+In order to use the mysql_replication module, 
+you have to change the way it works with MySQL passwords from a script, from the command line.
+
+
+*/usr/local/Cellar/ansible/1.9.**4/libexec/lib/python2.7/site-*
+*packages/ansible/modules/**extras/database/mysql/mysql_**replication.py*
+
+320:        warnings.filterwarnings('ignore', category=MySQLdb.Warning)
+321:        #warnings.filterwarnings('error', category=MySQLdb.Warning)
+
+I had to use ignore instead of the original line 321 error.
+```
+
 
 Ansible dependancies are installed from the playbooks.  The ansible.cfg and host file are included.  Some changes may need to happen with the host file. To be able to use it with your environment.
 
