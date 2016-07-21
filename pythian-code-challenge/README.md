@@ -43,6 +43,10 @@ you have to change the way it works with MySQL passwords from a script, from the
 321:        #warnings.filterwarnings('error', category=MySQLdb.Warning)
 
 I had to use ignore instead of the original line 321 error.
+
+Also, passwords are not encrytped on purpose, as this is used to help teach how to use them in your playbook.
+When you want to encrypt your passwords, you can use ansible-vault create vars/main.yml your encrypted file.
+
 ```
 
 
