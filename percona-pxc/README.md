@@ -30,11 +30,10 @@ Requirements before you can use this playbook, and roles.
 - virtualbox
   5.0.24
 
-`
-Ansible dependancies are installed from the playbooks.
+```Ansible dependancies are installed from the playbooks.
 The ansible.cfg and host file are included.  Some changes will need to happen with them. Areas marked CHANGE-ME are noted in the files.
 The hosts file was built from the information provided by vagrant ssh-config
-`
+```
 
 ----------------
 Example Usage
@@ -80,9 +79,9 @@ If you find that after building your vms, and Ansible has deployed, provisioned 
 
 Example:
 
-ssh -i /Users/kurt.larsen/vagrant/pythian-code-challenge/.vagrant/machines/etlslave/virtualbox/private_key vagrant@127.0.0.1 -v -p2202
+ssh -i /home/klarsen/percona-pxc/.vagrant/machines/etl/virtualbox/private_key vagrant@127.0.0.1 -v -p2202
 
-You may find that you have to delete an older entry in your vi +774 /Users/kurt.larsen/.ssh/known_hosts.  Then try it again.
+You may find that you have to delete an older entry in your vi +774 /home/klarsen/.ssh/known_hosts.  Then try it again.
 
 
 
