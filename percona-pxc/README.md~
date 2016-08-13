@@ -46,7 +46,6 @@ You should start to see your vm's being built. Soon after vagrant will pass the 
 
 The directory structure, as it is now.
 
-```
 tree
 .
 ├── ansible.cfg
@@ -56,6 +55,7 @@ tree
 ├── roles
 │   └── pxc
 │       ├── files
+│       │   ├── checkip-dyndns.sh
 │       │   └── secure.sql
 │       ├── handlers
 │       │   └── main.yml
@@ -71,7 +71,7 @@ tree
 └── vars
     ├── main.yml
     └── vault_pass.txt
-```
+
 
 
 Troubleshooting:
