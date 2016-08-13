@@ -1,4 +1,4 @@
 [vlab]
-master ansible_ssh_host=127.0.0.1 ansible_ssh_port=2222 ansible_ssh_user=vagrant ansible_ssh_private_key_file=/home/klarsen/vagrant/percona-pxc/.vagrant/machines/master/virtualbox/private_key
-slave ansible_ssh_host=127.0.0.1 ansible_ssh_port=2223 ansible_ssh_user=vagrant ansible_ssh_private_key_file=/home/klarsen/vagrant/percona-pxc/.vagrant/machines/slave/virtualbox/private_key
-etl ansible_ssh_host=127.0.0.1 ansible_ssh_port=2224 ansible_ssh_user=vagrant ansible_ssh_private_key_file=/home/klarsen/vagrant/percona-pxc/.vagrant/machines/etl/virtualbox/private_key
+master ansible_ssh_host=127.0.0.1 ansible_ssh_port=2222 ansible_ssh_user=vagrant ansible_ssh_private_key_file=/home/CHANGE-ME/vagrant/percona-pxc/.vagrant/machines/master/virtualbox/private_key
+slave ansible_ssh_host=127.0.0.1 ansible_ssh_port=2223 ansible_ssh_user=vagrant ansible_ssh_private_key_file=/home/CHANGE-ME/vagrant/percona-pxc/.vagrant/machines/slave/virtualbox/private_key
+etl ansible_ssh_host=127.0.0.1 ansible_ssh_port=2224 ansible_ssh_user=vagrant ansible_ssh_private_key_file=/home/CHANGE-ME/vagrant/percona-pxc/.vagrant/machines/etl/virtualbox/private_key

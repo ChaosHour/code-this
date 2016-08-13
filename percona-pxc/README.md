@@ -18,22 +18,23 @@ Percona Cluster - The pxc role - Installs server, client, and setups dirs where 
 
 Requirements before you can use this playbook, and roles.
 ------------
-Internet Access
-16 Gigs of ram or more.
+- Internet Access
+- 16 Gigs of ram or more.
 
-ansible --version
-ansible 2.1.0.0
+- ansible --version
+- ansible 2.1.0.0
 
-vagrant --version
-Vagrant 1.8.1
+- vagrant --version
+- Vagrant 1.8.1
 
-virtualbox
-5.0.24
+- virtualbox
+  5.0.24
 
-
-Ansible dependancies are installed from the playbooks.  The ansible.cfg and host file are included.  Some changes may need to happen with the host file. To be able to use it with your environment.
-
+`
+Ansible dependancies are installed from the playbooks.
+The ansible.cfg and host file are included.  Some changes will need to happen with them. Areas marked CHANGE-ME are noted in the files.
 The hosts file was built from the information provided by vagrant ssh-config
+`
 
 ----------------
 Example Usage
