@@ -30,10 +30,11 @@ Requirements before you can use this playbook, and roles.
 - virtualbox
   5.0.24
 
-```Ansible dependancies are installed from the playbooks.
+`
+Ansible dependancies are installed from the playbooks.
 The ansible.cfg and host file are included.  Some changes will need to happen with them. Areas marked CHANGE-ME are noted in the files.
 The hosts file was built from the information provided by vagrant ssh-config
-```
+`
 
 ----------------
 Example Usage
