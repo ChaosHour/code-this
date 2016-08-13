@@ -3,7 +3,7 @@
 # Script to output the datetime, with public ip
 # Created for the purpose of this code challenge
 # 07/18/2016
-# Created ByL Kurt Larsen
+# Created By Kurt Larsen
 ################################################
 
 #set -xv

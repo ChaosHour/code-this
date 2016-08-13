@@ -1,0 +1,19 @@
+---
+#
+# main.yml - handlers  to start, stop, and restart services.
+#
+
+  #- name: enable MySQL as a service
+  #  command: systemctl enable mysqld
+  #  ignore_errors: yes
+
+
+  - name: Start MySQL
+    command: systemctl start mysql.service
+    ignore_errors: yes
+    when: ( ansible_hostname == 'slave' or ansible_hostname == 'etl')
+
+
+  - name: Bootstrap PXC
+    command: systemctl start mysql@bootstrap.service
+    when: ansible_hostname == "master"

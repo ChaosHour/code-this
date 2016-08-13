@@ -1,0 +1,32 @@
+---
+#
+# usermaint.yml - Playbook for system-level users
+#
+  - name: Set root password
+    mysql_user:  name=root password={{mysql_root_pass}} login_user=root login_password='' state=present
+
+  #- name: Create bob
+  #  mysql_user: name=bob password_hash='*EE0D72C1085C46C5278932678FBE2C6A782821B4'  priv=*.*:ALL host={{ host_subnet2 }} login_user=root login_password={{ mysql_root_pass }} state=present
+
+  - name: Create proxy User
+    mysql_user: name=proxy password_hash='{{ proxysql_hash }}' priv="*.*:USAGE" host={{ host_subnet }} login_user=root login_password={{ mysql_root_pass }}  state=present
+
+  - name: Create chaos user
+    mysql_user: name=chaos password_hash={{ chaos_hash }} priv="test.*:ALL" host={{ host_subnet }}  login_user=root login_password={{ mysql_root_pass }}  state=present
+
+  - name: Add sstuser  user to all servers
+    mysql_user: name=sstuser password_hash={{ sstuser_hash }} priv="*.*:RELOAD, LOCK TABLES, REPLICATION CLIENT" host={{ host_subnet2 }} login_user=root login_password={{ mysql_root_pass }} state=present
+
+  - name: Add monuser user to all servers
+    mysql_user: name=monuser password_hash={{ monuser_hash }}  priv="*.*:SELECT, PROCESS, REPLICATION CLIENT" host={{ host_subnet2 }} login_user=root login_password={{ mysql_root_pass }} state=present
+
+
+
+
+#add the ProxySQL user
+#GRANT USAGE ON *.* TO 'proxy'@'192.%' IDENTIFIED BY 'proxy';
+#GRANT ALL ON test.* TO 'chaos'@'192.%' IDENTIFIED BY 'letmein';
+#GRANT RELOAD, LOCK TABLES, REPLICATION CLIENT ON *.* TO 'sstuser'@'localhost' IDENTIFIED BY 's3cret';
+#GRANT ALL ON test.* TO 'chaos'@'127.0.0.1' IDENTIFIED BY 'letmein';
+#GRANT ALL ON *.* TO 'root'@'192.%' IDENTIFIED BY 'letmein' WITH GRANT OPTION;
+#GRANT REPLICATION CLIENT ON *.* TO 'monuser'@'192.%' IDENTIFIED BY 'monpass';
