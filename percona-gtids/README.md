@@ -6,8 +6,8 @@ This is an Ansible Playbook to bootstrap, setup, and configure a 3 node Percona-
 
 Role Name
 =========
-gtids
-replication
+- gtids
+- replication
 
 
 A brief description of the roles.
