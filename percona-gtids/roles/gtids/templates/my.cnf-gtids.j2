@@ -1,0 +1,151 @@
+# {{ ansible_managed }}
+# Local modifications will be overwritten.
+# This file is only concerned with core filesystem layout and server role and identification
+
+
+[client]
+port            = 3306
+socket          = /var/lib/mysql/mysql.sock
+default_character_set = utf8
+
+[mysqld_safe]
+nice            = 0
+pid-file        = /var/lib/mysql/mysql.pid
+
+[mysqld]
+user            = mysql
+#bind_address    = 0.0.0.0
+socket          = /var/lib/mysql/mysql.sock
+pid-file        = /var/lib/mysql/mysql.pid
+port            = 3306
+datadir         = /db/data01
+tmpdir          = /db/tmp01:/db/tmp02:/db/tmp03
+old_passwords   = 0
+log_error       = /db/logs01/mysql-error.err
+collation_server     = utf8_general_ci
+character_set_server = utf8
+log_bin          = /db/logs01/mysql-bin
+max_allowed_packet = 32M
+
+
+server_id                               =  {{ replication_server_id }}
+
+
+#GTID Stuff
+#log-bin=mysql-bin
+#binlog_format=mixed
+#gtid-mode=on
+#enforce-gtid-consistency
+#log-slave-updates
+
+# Replication
+relay_log        = /db/logs01/mysql-relay-bin
+relay_log_index  = /db/logs01/mysql-relay-index
+
+[mysqldump]
+quote-names
+quick
+
+
+[mysqld]
+back_log = 300
+#open_files = 1024
+#open_files_limit = 8192
+skip_name_resolve
+long_query_time = 10
+max_binlog_size = 256M
+expire_logs_days = 4
+max_connect_errors = 100
+concurrent_insert = 2
+connect_timeout = 30
+sql_mode = NO_AUTO_CREATE_USER
+table_open_cache = 512
+thread_cache_size = 100
+event_scheduler = on
+transaction_isolation = REPEATABLE-READ
+log_bin_trust_function_creators = 1
+log_warnings
+#slow_query_log_file = /var/log/mysql/mysql-slow.log
+query_cache_size = 0
+query_cache_type = 0
+max_allowed_packet = 32M
+#master_retry_count = 360
+slave_net_timeout = 900
+innodb_data_file_path = ibdata1:128M;ibdata2:10M:autoextend
+innodb_log_files_in_group = 3
+innodb_buffer_pool_instances = 4
+#innodb_additional_mem_pool_size = 4M
+innodb_status_file
+innodb_file_per_table
+skip_innodb_doublewrite
+innodb_stats_on_metadata = 0
+innodb_table_locks = 0
+innodb_lock_wait_timeout = 60
+innodb_file_format = Barracuda
+innodb_file_format_max = Barracuda
+#thread_concurrency = {{ innodb_thread_concurrency }}
+innodb_read_io_threads = 8
+innodb_write_io_threads = 16
+innodb_buffer_pool_size = {{ innodb_buffer_pool_size }}
+#innodb_buffer_pool_size = {{ innodb_buffer_pool_size_mb | default (64) }}M
+max_connections = 100
+innodb_log_buffer_size = 256M
+innodb_log_file_size = 368M
+thread_stack = 512K
+#key_buffer = 2M
+sort_buffer_size = 2M
+read_buffer_size = 2M
+read_rnd_buffer_size = 2M
+join_buffer_size = 2M
+binlog_cache_size = 128K
+query_cache_limit = 1M
+tmp_table_size = 256M
+max_heap_table_size = 256M
+bulk_insert_buffer_size = 256M
+innodb_io_capacity = 200
+innodb_flush_method = O_DIRECT
+innodb_flush_log_at_trx_commit = 2
+innodb_thread_concurrency = 0
+innodb_commit_concurrency = 2
+innodb_data_home_dir = /db/data01
+innodb_log_group_home_dir = /db/logs01
+
+
+
+
+{% if 'master' in ansible_hostname %}
+#GTID Stuff
+#log-bin=mysql-bin
+binlog_format=ROW
+gtid-mode=on
+enforce-gtid-consistency
+innodb_support_xa = 1
+log_slave_updates = ON
+sync_binlog       = 125
+{% endif %}
+
+
+{% if 'slave' in ansible_hostname %}
+#GTID Stuff
+#log-bin=mysql-bin
+binlog_format=ROW
+gtid-mode=on
+enforce-gtid-consistency
+innodb_support_xa = 0
+log_slave_updates = ON
+sync_binlog       = 125
+read_only = ON
+{% endif %}
+
+
+{% if 'etl' in ansible_hostname %}
+#GTID Stuff
+#log-bin=mysql-bin
+binlog_format=ROW
+gtid-mode=on
+enforce-gtid-consistency
+innodb_support_xa = 0
+log_slave_updates = ON
+sync_binlog       = 125
+read_only = ON
+{% endif %}

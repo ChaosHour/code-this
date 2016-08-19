@@ -1,0 +1,38 @@
+---
+#
+# replication.yml -  Playbook Used to setup MySQL GTIDs replication on slave and etl to master server.
+#
+
+
+      - name: Reset master binlog
+        command: mysql -e "reset master"
+
+
+      - name: Get the master replication status
+        mysql_replication: mode=getmaster login_user=root login_password={{ mysql_root_pass }}
+        delegate_to: master
+        register: repl_stat
+
+
+      - debug: var=repl_stat
+
+      - name: Purge gtids Slave
+        command: mysql -e "SET GLOBAL gtid_purged='{{ repl_stat.Executed_Gtid_Set }}'"
+
+
+      - name: Change master to start replication on Slave
+        mysql_replication: mode=changemaster master_host={{ master }} master_user=repl master_password={{ mysql_repl_pass }}  master_auto_position=1  login_user=root login_password={{ mysql_root_pass }}
+        ignore_errors: yes
+
+
+      - name: Start Replication on Slave
+        mysql_replication: mode=startslave login_user=root login_password={{ mysql_root_pass }}
+
+      - name: Check replication
+        mysql_replication: mode=getslave login_port=3306 login_user=root login_password={{ mysql_root_pass }}
+        register: repl_stat2
+        when: "( ansible_hostname == 'slave' or ansible_hostname == 'etl')"
+
+
+      - debug:  var=(repl_stat2.Master_Host,repl_stat2.Slave_IO_Running,repl_stat2.Slave_SQL_Running,repl_stat2.Executed_Gtid_Set)
+        when: "( ansible_hostname == 'slave' or ansible_hostname == 'etl')"

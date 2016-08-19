@@ -1,0 +1,21 @@
+---
+#
+# usermaint.yml - Playbook for system-level users
+#
+  - name: Set root password
+    mysql_user:  name=root password={{mysql_root_pass}} login_user=root login_password='' state=present
+
+  - name: Create proxy User
+    mysql_user: name=proxy password_hash='{{ proxysql_hash }}' priv="*.*:USAGE" host={{ host_subnet }} login_user=root login_password={{ mysql_root_pass }}  state=present
+
+  - name: Create Replication User
+    mysql_user: name=repl password_hash='{{ mysql_repl_hash }}' priv="*.*:REPLICATION SLAVE" host={{ host_subnet }} login_user=root login_password={{ mysql_root_pass }}  state=present
+
+  - name: Create chaos user
+    mysql_user: name=chaos password_hash={{ chaos_hash }} priv="test.*:ALL" host={{ host_subnet }}  login_user=root login_password={{ mysql_root_pass }}  state=present
+
+  - name: Add sstuser  user to all servers
+    mysql_user: name=sstuser password_hash={{ sstuser_hash }} priv="*.*:RELOAD, LOCK TABLES, REPLICATION CLIENT" host={{ host_subnet2 }} login_user=root login_password={{ mysql_root_pass }} state=present
+
+  - name: Add monuser user to all servers
+    mysql_user: name=monuser password_hash={{ monuser_hash }}  priv="*.*:SELECT, PROCESS, REPLICATION CLIENT" host={{ host_subnet2 }} login_user=root login_password={{ mysql_root_pass }} state=present
