@@ -6,10 +6,11 @@ What is needed:
 - testdb.sql
 - pythian_utf8_check.sh script 
 - Currently the use of a ~/.my.cnf to hold your MySQL creds.
+
+[The Database schema and Table structure used for testing provided from here!](https://oracle-base.com/articles/mysql/mysql-converting-table-character-sets-from-latin1-to-utf8)
+
 ```
 *Note:* 
-> [The Database schema and Table structure used for testing provided from here!](https://oracle-base.com/articles/mysql/mysql-converting-table-character-sets-from-latin1-to-utf8)
-
 cat testdb.sql | mysql
 
 Now mangle the data for testing.
