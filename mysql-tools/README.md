@@ -8,7 +8,7 @@ What is needed:
 - Currently the use of a ~/.my.cnf to hold your MySQL creds.
 ```
 *Note:* 
-[The Database schema and Table structure used for testing provided from here!](ttps://oracle-base.com/articles/mysql/mysql-converting-table-character-sets-from-latin1-to-utf8)
+> [The Database schema and Table structure used for testing provided from here!](https://oracle-base.com/articles/mysql/mysql-converting-table-character-sets-from-latin1-to-utf8)
 
 cat testdb.sql | mysql
 
