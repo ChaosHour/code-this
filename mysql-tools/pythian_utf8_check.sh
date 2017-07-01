@@ -8,10 +8,17 @@
 #           |___/                                                 |_|
 #                       Script Created by: Kurt Larsen 
 #                       Date: 6-30-2017
+#                       Purpose of script: 
+#                       To check if utf8 encoded data is being stored in  latin1 columns.
+#                       The script makes use of nested bash loops.
+#                       contributors: Jamie Roberts for the IFS=$'\n' part
+#                       Apparently, I didn't rtfm. Thank's Jamie for your insight.
 ############################################################################################
 # Un comment to debug bash script.
 #set -xv
+# Set your database var.
 DB1="char_test_db"
+# Get a list of tables to loop through. 
 TB=$( mysql -Bse "show tables from ${DB1}" )
 
 for i in ${TB}
