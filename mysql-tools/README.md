@@ -10,6 +10,21 @@ What is needed:
 *Note:* 
 cat testdb.sql | mysql
 
+Now mangle the data for testing.
+SET NAMES utf8;
+
+ALTER TABLE t1 CONVERT TO CHARACTER SET utf8;
+
+SELECT id, description, HEX(description) FROM t1;
++----+----------------+------------------------------+
+| id | description    | HEX(description)             |
++----+----------------+------------------------------+
+|  1 | Â¡VolcÃ¡n!     | C382C2A1566F6C63C383C2A16E21 |
++----+----------------+------------------------------+
+1 row in set (0.01 sec)
+
+mysql>
+
 Run the script to validate your data from the char_test_db
 
 Results:
