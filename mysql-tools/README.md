@@ -1,10 +1,10 @@
-Bash script to check UTF8 Encodings in Latin1 
+Bash script to check UTF8 Encodings 
 
 What is needed: 
 - Bash 
 - SQL file to create a database and table for testing.
-- pythian_utf8_check.sh script 
 - testdb.sql
+- pythian_utf8_check.sh script 
 
 ```
 *Note:* 
@@ -13,7 +13,7 @@ cat testdb.sql | mysql
 Run the script to validate your data from the char_test_db
 
 Results:
-MacBook-Pro:mysql-tools klarsen$ ./pythian_utf8_check.sh
+./pythian_utf8_check.sh
 Current table => t1 and Column =>  description  has a count of 1 records that need to be fixed
 ```
 ```
