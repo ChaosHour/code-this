@@ -5,9 +5,11 @@ What is needed:
 - SQL file to create a database and table for testing.
 - testdb.sql
 - pythian_utf8_check.sh script 
-
+- Currently the use of a ~/.my.cnf to hold your MySQL creds.
 ```
 *Note:* 
+[The Database schema and Table structure used for testing provided from here!](ttps://oracle-base.com/articles/mysql/mysql-converting-table-character-sets-from-latin1-to-utf8)
+
 cat testdb.sql | mysql
 
 Now mangle the data for testing.
