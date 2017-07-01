@@ -16,7 +16,8 @@ Results:
 MacBook-Pro:mysql-tools klarsen$ ./pythian_utf8_check.sh
 Current table => t1 and Column =>  description  has a count of 1 records that need to be fixed
 ```
-MacBook-Pro:mysql-tools klarsen$ mysql -e "show table status like 't1'\G" char_test_db
+```
+mysql -e "show table status like 't1'\G" char_test_db
 *************************** 1. row ***************************
            Name: t1
          Engine: InnoDB
@@ -36,3 +37,4 @@ Max_data_length: 0
        Checksum: NULL
  Create_options:
         Comment:
+```
