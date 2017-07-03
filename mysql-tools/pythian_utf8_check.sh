@@ -32,6 +32,8 @@ IFS=$'\n'
      #echo "Current table is ${i} Column ${j}";
      QUERY="SELECT count(*)\`${j}\` FROM \`${DB1}\`.\`${i}\` WHERE LENGTH(\`${j}\`) != CHAR_LENGTH(\`${j}\`)" 
      COUNT=$(mysql -Bse ${QUERY})
+      # echo out the tables and columns this script loops through for testing.
+      #echo ${QUERY} 
       if [[ ${COUNT} -gt "0" ]]
       then
          echo "Current table => ${i} and Column =>  ${j}  has a count of ${COUNT} records that need to be fixed ";
