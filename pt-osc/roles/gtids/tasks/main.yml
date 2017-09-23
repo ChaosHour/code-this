@@ -1,0 +1,63 @@
+---
+#
+# main.yml - Playbook to add repo's and install Percona server, and setup dirs.
+#
+
+  - include: pre-install.yml
+
+  - name: Install MySQL
+    yum: name={{ item }}
+    with_items:
+      - MySQL-python
+      - Percona-Server-server-56
+      - percona-xtrabackup
+      - percona-toolkit
+
+
+  - name:  Build and Copy my dot cnf
+    template: src=templates/my.cnf-gtids.j2 dest=/etc/my.cnf  owner=mysql group=mysql mode=0600
+
+
+
+  - name:  Make the MySQL DB directory
+    file:  name="/db" owner=mysql group=mysql mode=0750 state=directory
+
+
+  - name: Make the subdirectories under /db
+    file:  name='/db/{{item}}'  owner=mysql group=mysql mode=0750 state=directory
+    with_items:
+      - data01
+      - logs01
+      - tmp01
+      - tmp02
+      - tmp03
+      - backup
+      - scripts
+
+
+
+
+  - name: Install the DB once only by checking for the exisance of the ibdata1  file
+    action: command /usr/bin/mysql_install_db --user=mysql --ldata=/db/data01 --explicit_defaults_for_timestamp
+    args:
+       creates: /db/data01/ibdata1
+
+
+
+  - name: change owner ship to mysql of directories under /db
+    file:
+        path: /db
+        state: directory
+        recurse: True
+        mode: 0750
+        owner: mysql
+        group: mysql
+    notify:
+      #- enable MySQL as a service
+       - Start MySQL on Master
+       - Start MySQL
+
+
+  - meta: flush_handlers
+
+  - include: post-install.yml

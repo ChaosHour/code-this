@@ -1,0 +1,79 @@
+---
+#
+# usermaint.yml - Playbook for system-level users
+#
+
+
+  - name: Set root password
+    mysql_user:
+      name: root
+      password: "{{mysql_root_pass}}"
+      login_user: root
+      login_password: ''
+      state: present
+    tags:
+      - user1
+
+  - name: Create proxy User
+    mysql_user:
+      name: proxy
+      password: "{{ proxysql_hash }}"
+      priv: "*.*:USAGE"
+      host: "{{ host_subnet }}"
+      login_user: root
+      login_password: "{{ mysql_root_pass }}"
+      state: present
+    tags:
+      - user
+
+  - name: Create Replication User
+    mysql_user:
+      name: repl
+      password: "{{ mysql_repl_hash }}"
+      encrypted: yes
+      priv: "*.*:REPLICATION SLAVE"
+      host: "{{ host_subnet }}"
+      login_user: root
+      login_password: "{{ mysql_root_pass }}"
+      state: present
+    tags:
+      - user
+
+  - name: Create chaos user
+    mysql_user:
+      name: chaos
+      password: "{{ chaos_hash }}"
+      encrypted: yes
+      priv: "test.*:ALL"
+      host: "{{ host_subnet }}"
+      login_user: root
+      login_password: "{{ mysql_root_pass }}"
+      state: present
+    tags:
+      - user
+
+  - name: Add sstuser  user to all servers
+    mysql_user:
+      name: sstuser
+      password: "{{ sstuser_hash }}"
+      encrypted: yes
+      priv: "*.*:REPLICATION CLIENT,RELOAD,LOCK TABLES"
+      host: "{{ host_subnet2 }}"
+      login_user: root
+      login_password: "{{ mysql_root_pass }}"
+      state: present
+    tags:
+      - user
+
+  - name: Add monuser user to all servers
+    mysql_user:
+      name: monuser
+      password: "{{ monuser_hash }}"
+      encrypted: yes
+      priv: "*.*:SELECT,PROCESS,REPLICATION CLIENT"
+      host: "{{ host_subnet2 }}"
+      login_user: root
+      login_password: "{{ mysql_root_pass }}"
+      state: present
+    tags:
+      - user

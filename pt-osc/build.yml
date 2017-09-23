@@ -1,0 +1,24 @@
+---
+- hosts: all
+  remote_user: vagrant
+  become: yes
+  become_user: root
+  become_method: sudo
+  gather_facts: True
+  vars_files:
+      -  vars/main.yml
+
+  tasks:
+
+
+  pre_tasks:
+   []
+
+
+  roles:
+    - gtids
+    - { role: replication, when: "( ansible_hostname == 'slave' or ansible_hostname == 'etl')", tags: [ 'repl' ] }
+
+
+  post_tasks:
+   []
