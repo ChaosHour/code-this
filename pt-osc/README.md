@@ -33,9 +33,11 @@ https://www.virtualbox.org/wiki/Downloads
   - Make sure to download the Extension Pack.
 
 Git 4 Mac:
-https://git-scm.com/download/mac
+- https://git-scm.com/download/mac
 
-vagrant box update  To update CentOS 7 to the latest used by Vagrant.
+```
+vagrant box update  
+To update CentOS 7 to the latest used by Vagrant.
 
 Internet Access
 16 Gigs of ram or more.
@@ -55,7 +57,7 @@ The 'redis' python module is required for the redis fact cache, 'pip install red
 
 Check that the container is running:
 docker ps
-
+```
 
 ===========
 `The hosts file can be changed as well. I use loopback IP and ports from vagrant ssh-config`
