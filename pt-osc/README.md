@@ -43,9 +43,9 @@ To update CentOS 7 to the latest used by Vagrant.
 Internet Access
 16 Gigs of ram or more.
 
-Docker is used to spin up a Redis container for the backend caching with Ansible.
+###Docker is used to spin up a Redis container for the backend caching with Ansible.
 If you don't want to use it? Comment it out from the ansible.cfg file.
-`You will need this to be running before (vagrant up).`
+You will need this to be running before (vagrant up).
 
 Redis:
 Remove container:
@@ -60,9 +60,9 @@ Check that the container is running:
 docker ps
 ```
 
-```
-`The hosts file can be changed as well. I use loopback IP and ports from vagrant ssh-config`
+The hosts file can be changed as well. I use loopback IP and ports from vagrant ssh-config
 
+```
 You can change the hosts file to use the IP's from the Vagrantfile per host.  The vangrant host-manager will update you local Mac /etc/hosts file and that of each VM.
 
 
@@ -76,7 +76,7 @@ Make sure that the vault_pass.txt file is set with chmod 644. Other wise ansible
 Ansible dependancies are installed from the playbooks.  The ansible.cfg and host file are included.  Some changes will need happen with the these files. To be able to use it with your environment.
 
 
-`Look for the CHANGE-ME in them, an adjust accordingly.`
+###Look for the CHANGE-ME in them, an adjust accordingly.
 
 
 The hosts file was built from the information provided by vagrant ssh-config

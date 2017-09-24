@@ -3,3 +3,4 @@
 /secret.yml
 /group_vars/production
 .DS_Store
+.vagrant
