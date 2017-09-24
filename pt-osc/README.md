@@ -20,20 +20,53 @@ VM's Used to test PT-OSC.
 
 Requirements before you can use this playbook, and roles.
 ------------
+https://www.vagrantup.com/downloads.html
+
+Vagrant Plugins:
+  - vagrant plugin install vagrant-vbguest
+  - vagrant plugin install vagrant-hostmanager
+
+List your Vagrant Plugins:
+  - vagrant plugin  list
+
+https://www.virtualbox.org/wiki/Downloads
+  - Make sure to download the Extension Pack.
+
+Git 4 Mac:
+https://git-scm.com/download/mac
+
+vagrant box update  To update CentOS 7 to the latest used by Vagrant.
+
 Internet Access
 16 Gigs of ram or more.
 
-ansible --version
-ansible 2.1.0.0
+Docker is used to spin up a Redis container for the backend caching with Ansible.
+If you don't want to use it? Comment it out from the ansible.cfg file.
+`You will need this to be running before (vagrant up).`
 
-vagrant --version
-Vagrant 1.8.1
+Redis:
+Remove container:
+docker rm -v $(docker ps -aq --filter=ancestor=redis:latest)
 
-virtualbox
-5.0.24
+Spin up conatiner:
+docker run --name redis -d -p 6379:6379 redis:latest
+
+The 'redis' python module is required for the redis fact cache, 'pip install redis'
+
+Check that the container is running:
+docker ps
+
+
+===========
+`The hosts file can be changed as well. I use loopback IP and ports from vagrant ssh-config`
+
+You can change the hosts file to use the IP's from the Vagrantfile per host.  The vangrant host-manager will update you local Mac /etc/hosts file and that of each VM.
 
 
 Ansible-Vault is used to encrypt the vars main.yml file.  This is set to decrypt in the Vagrantfile. Just wanted to show some usage with Ansible-Vault.
+
+Note:
+Make sure that the vault_pass.txt file is set with chmod 644. Other wise ansible will think it is a script and not continue.
 
 
 
@@ -102,7 +135,7 @@ ok: [etl] => {
 `You can use Ansible to check replication after the playbook has completed.`
 
 ```
-percona-gtids$ ansible -u vagrant slave:etl -e @vars/main.yml -m shell -s -a 'mysql -u root -p"{{ mysql_root_pass }}" -e "show slave status\G"| egrep "Slave_IO_Running:|Slave_SQL_Running:|Seconds_Behind_Master:|Master_Host:"' --vault-password-file vars/vault_pass.txt
+percona-gtids$ ansible -u vagrant -i inventory slave:etl -e @vars/main.yml -m shell -b -a 'mysql -u root -p"{{ mysql_root_pass }}" -e "show slave status\G"| egrep "Slave_IO_Running:|Slave_SQL_Running:|Seconds_Behind_Master:|Master_Host:"' --vault-password-file vars/vault_pass.txt
 slave | SUCCESS | rc=0 >>
                   Master_Host: 192.168.50.2
              Slave_IO_Running: Yes
@@ -115,6 +148,48 @@ etl | SUCCESS | rc=0 >>
             Slave_SQL_Running: Yes
         Seconds_Behind_Master: 0Warning: Using a password on the command line interface can be insecure.
 
+```
+
+
+
+```
+Ping your hosts:
+
+ansible -i inventory all -l master  -m ping
+master | SUCCESS => {
+    "changed": false,
+    "failed": false,
+    "ping": "pong"
+}
+
+ansible -i inventory all -l master:slave -m ping
+slave | SUCCESS => {
+    "changed": false,
+    "failed": false,
+    "ping": "pong"
+}
+master | SUCCESS => {
+    "changed": false,
+    "failed": false,
+    "ping": "pong"
+}
+
+ansible -i inventory all  -m ping
+master | SUCCESS => {
+    "changed": false,
+    "failed": false,
+    "ping": "pong"
+}
+slave | SUCCESS => {
+    "changed": false,
+    "failed": false,
+    "ping": "pong"
+}
+etl | SUCCESS => {
+    "changed": false,
+    "failed": false,
+    "ping": "pong"
+}
 ```
 
 Troubleshooting:

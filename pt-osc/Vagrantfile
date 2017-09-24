@@ -1,85 +1,45 @@
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  config.vm.box      = "centos/7"
-  ##config.vm.box     = "centos65"
-  #config.vm.box_url     = "file:///Users/kurt.larsen/projects/cookbooks/vagrant/centos65-x86_64-20140116.box"
-  ##config.vm.box_url     = "file:///Users/kurt.larsen/vagrant/centos65-x86_64-20140116.box"
-  #config.vm.box = "ubuntu/trusty64"
+   config.vm.box      = "centos/7"
 
   # Configure vagrant-cachier plugin
-     if Vagrant.has_plugin?("vagrant-hostmanager")
+   if Vagrant.has_plugin?("vagrant-hostmanager")
        config.hostmanager.enabled = true
        config.hostmanager.manage_host = true
        config.hostmanager.ignore_private_ip = false
        config.hostmanager.include_offline = true
-     end
-     # @end: Configure vagrant-cachier plugin
-
-     #if Vagrant.has_plugin?("vagrant-cachier")
-    #   config.cache.scope = :box
-    #   config.cache.enable :apt
-    #   config.cache.enable :yum
-    # else
-    # puts "[-] WARN: This would be much faster if you ran vagrant plugin install vagrant-cachier first"
-    # end
-
-     #if Vagrant.has_plugin?("vagrant-cachier")
-       # Configure cached packages to be shared between instances of the same base box.
-       # More info on http://fgrehm.viewdocs.io/vagrant-cachier/usage
-      # config.cache.scope = :box
-       # OPTIONAL: If you are using VirtualBox, you might want to use that to enable
-     # NFS for shared folders. This is also very useful for vagrant-libvirt if you
-     # want bi-directional sync
-     #config.cache.synced_folder_opts = {
-     #   type: :nfs,
-       # The nolock option can be useful for an NFSv3 client that wants to avoid the
-       # NLM sideband protocol. Without this option, apt-get might hang if it tries
-       # to lock files needed for /var/cache/* operations. All of this can be avoided
-       # by using NFSv4 everywhere. Please note that the tcp option is not the default.
-      # mount_options: ['rw', 'vers=3', 'tcp', 'nolock']
-     #}
-     # For more information please check http://docs.vagrantup.com/v2/synced-folders/basic_usage.html
-     #end
-     # @end: Configure vagrant-cachier plugin
+end
 
   config.vm.provision "ansible" do |ansible|
-    #ansible.verbose = "vvv"
-    ansible.playbook = "build.yml"
-    ansible.sudo = true
-    ansible.raw_arguments  = "--vault-password-file=vars/vault_pass.txt"
-  end
-
-
-
+   #ansible.verbose = "vvv"
+   ansible.playbook = "build.yml"
+   #ansible.sudo = true
+   ansible.become = true
+   ansible.raw_arguments  = "--vault-password-file=vars/vault_pass.txt"
+end
 
   config.vm.define "master" do |master|
    master.vm.hostname = "master"
-    master.vm.network "forwarded_port", guest: 3306, host: 3337
-    #master.vm.network "forwarded_port", guest: 6032, host: 6337
-    #master.vm.network "forwarded_port", guest: 6031, host: 6031
-    master.vm.network "private_network", ip: "192.168.50.2", virtualbox__intnet: true
-  end
+   master.vm.network "forwarded_port", guest: 3306, host: 3337
+   master.vm.network "private_network", ip: "192.168.50.2", virtualbox__intnet: true
+end
 
- config.vm.define "slave" do |slave|
-     slave.vm.hostname = "slave"
-     slave.vm.network "forwarded_port", guest: 3306, host: 3338
-     #slave.vm.network "forwarded_port", guest: 6032, host: 6032
-     #slave.vm.network "forwarded_port", guest: 6031, host: 6031
-     slave.vm.network "private_network", ip: "192.168.50.3", virtualbox__intnet: true
-   end
+  config.vm.define "slave" do |slave|
+   slave.vm.hostname = "slave"
+   slave.vm.network "forwarded_port", guest: 3306, host: 3338
+   slave.vm.network "private_network", ip: "192.168.50.3", virtualbox__intnet: true
+end
 
- config.vm.define "etl" do |etl|
-    etl.vm.hostname = "etl"
-    etl.vm.network "forwarded_port", guest: 3306, host: 3339
-    #etslave.vm.network "forwarded_port", guest: 6032, host: 6032
-    #etlslave.vm.network "forwarded_port", guest: 6031, host: 6031
-    etl.vm.network "private_network", ip: "192.168.50.4", virtualbox__intnet: true
-  end
+  config.vm.define "etl" do |etl|
+   etl.vm.hostname = "etl"
+   etl.vm.network "forwarded_port", guest: 3306, host: 3339
+   etl.vm.network "private_network", ip: "192.168.50.4", virtualbox__intnet: true
+end
 
-   config.vm.provider "virtualbox" do |v|
-    #v.memory = 512
-    v.memory = 1024
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 512
+    #v.memory = 1024
     v.cpus = 1
   end
- end
+end
