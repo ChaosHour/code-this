@@ -60,7 +60,7 @@ Check that the container is running:
 docker ps
 ```
 
-`The hosts file can be changed as well. I use loopback IP and ports from vagrant ssh-config
+`The hosts file can be changed as well. I use loopback IP and ports from vagrant ssh-config`
 
 ```
 You can change the hosts file to use the IP's from the Vagrantfile per host.  The vangrant host-manager will update you local Mac /etc/hosts file and that of each VM.
@@ -78,7 +78,7 @@ Ansible dependancies are installed from the playbooks.  The ansible.cfg and host
 The hosts file was built from the information provided by vagrant ssh-config
 ```
 
-###Look for the CHANGE-ME in them, an adjust accordingly.
+#Look for the CHANGE-ME in them, an adjust accordingly.
 ----------------
 Example Usage
 ----------------
