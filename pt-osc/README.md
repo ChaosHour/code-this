@@ -78,7 +78,7 @@ Ansible dependancies are installed from the playbooks.  The ansible.cfg and host
 The hosts file was built from the information provided by vagrant ssh-config
 ```
 
-#Look for the CHANGE-ME in them, an adjust accordingly.
+Look for the CHANGE-ME in them, an adjust accordingly.
 ----------------
 Example Usage
 ----------------
@@ -194,10 +194,10 @@ etl | SUCCESS => {
 ```
 
 Troubleshooting:
-If you find that after building your vms, and Ansible has deployed, provisioned without any issues, but you are not able to ping your vms via  ansible -u vagrant -i hosts all -m ping  then do check that you can ssh into them using the information from vagrant ssh-config.
+- If you find that after building your vms, and Ansible has deployed, provisioned without any issues, but you are not able to ping your vms via  ansible -u vagrant -i hosts all -m ping  then do check that you can ssh into them using the information from vagrant ssh-config.
 
 Example:
-Do check your your ports and settings with vagrant ssh-config first to validate them.
+- Do check your your ports and settings with vagrant ssh-config first to validate them.
 
 ssh -i /Users/kurt.larsen/vagrant/pythian-code-challenge/.vagrant/machines/etlslave/virtualbox/private_key vagrant@127.0.0.1 -v -p2202
 
