@@ -1,4 +1,4 @@
-PT-OSC
+#PT-OSC
 Percona Replication with GTIDs - VM
 
 This is an Ansible Playbook to bootstrap, setup, and configure a 3 node Percona-Gtid Replicated Environment for testing.
@@ -40,14 +40,13 @@ https://git-scm.com/download/mac
 
  Internet Access
  16 Gigs of ram or more.
+---
 
-
- ###Docker is used to spin up a Redis container for the backend caching with Ansible.
+ Docker is used to spin up a Redis container for the backend caching with Ansible.
  If you don't want to use it? Comment it out from the ansible.cfg file.
  You will need this to be running before (vagrant up).
 
 ```
--
 Redis:
 Remove container:
 docker rm -v $(docker ps -aq --filter=ancestor=redis:latest)
@@ -61,7 +60,7 @@ Check that the container is running:
 docker ps
 ```
 
-The hosts file can be changed as well. I use loopback IP and ports from vagrant ssh-config
+`The hosts file can be changed as well. I use loopback IP and ports from vagrant ssh-config
 
 ```
 You can change the hosts file to use the IP's from the Vagrantfile per host.  The vangrant host-manager will update you local Mac /etc/hosts file and that of each VM.
