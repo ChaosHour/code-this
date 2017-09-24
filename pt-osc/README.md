@@ -1,5 +1,5 @@
-#PT-OSC
-Percona Replication with GTIDs - VM
+PT-OSC
+- Percona Replication with GTIDs - VM
 
 This is an Ansible Playbook to bootstrap, setup, and configure a 3 node Percona-Gtid Replicated Environment for testing.
 
