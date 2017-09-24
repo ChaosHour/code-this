@@ -32,8 +32,9 @@ List your Vagrant Plugins:
 https://www.virtualbox.org/wiki/Downloads
   - Make sure to download the Extension Pack.
 
-Git 4 Mac:
-- https://git-scm.com/download/mac
+https://git-scm.com/download/mac
+ - Git 4 Mac:
+
 
 ```
 vagrant box update  
@@ -59,7 +60,7 @@ Check that the container is running:
 docker ps
 ```
 
-===========
+```
 `The hosts file can be changed as well. I use loopback IP and ports from vagrant ssh-config`
 
 You can change the hosts file to use the IP's from the Vagrantfile per host.  The vangrant host-manager will update you local Mac /etc/hosts file and that of each VM.
@@ -79,7 +80,7 @@ Ansible dependancies are installed from the playbooks.  The ansible.cfg and host
 
 
 The hosts file was built from the information provided by vagrant ssh-config
-
+```
 ----------------
 Example Usage
 ----------------
