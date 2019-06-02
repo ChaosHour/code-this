@@ -49,7 +49,7 @@ I like to log into both servers to monitor the progress, as well.
 
 - On the Master
 
-while :; do ps -ef grep -i ansible | grep -v grep; sleep 3; done
+while :; do ps -ef | grep -i ansible | grep -v grep; sleep 3; done
 
 - On the Slave:
 
